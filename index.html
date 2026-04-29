@@ -576,6 +576,7 @@ if (tg) {
 
 // ── Storage helpers ────────────────────────────────────────────────────────
 const KEY = 'bodega_wines_v1';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzF4zAzGwai7ELzrooW1dq1IMEBhQ0XCMkYRTMj_N319luNUngbIXGxrnmXH1IZuQhnMg/exec';
 
 async function loadWines() {
   try {
@@ -728,8 +729,16 @@ async function submitWine() {
   await saveWines(wines);
 
   // Notificar al bot (para que publique en el grupo)
-  if (tg) {
-    tg.sendData(JSON.stringify({ action: 'new_wine', wine }));
+// Enviar datos al Google Apps Script
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(wine)
+    });
+  } catch(e) {
+    console.error('Error enviando a Apps Script:', e);
   }
 
   btn.disabled = false;
