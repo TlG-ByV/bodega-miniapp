@@ -13,7 +13,6 @@
     --wine-light: #A63248;
     --wine-pale: #F5EBE8;
     --gold: #C09A5B;
-    --gold-light: #E8C87A;
     --ink: #1A1014;
     --ink-muted: #5C4A52;
     --surface: #FAF6F3;
@@ -24,427 +23,112 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--surface);
-    color: var(--ink);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  .nav { position: sticky; top: 0; z-index: 100; background: var(--wine); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 52px; }
+  .nav-title { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; }
+  .nav-tabs { display: flex; gap: 4px; }
+  .tab-btn { padding: 6px 14px; border-radius: 20px; border: none; background: transparent; color: rgba(255,255,255,0.65); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .tab-btn.active { background: rgba(255,255,255,0.18); color: #fff; }
 
-  /* ── NAV ── */
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--wine);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    height: 52px;
-  }
-
-  .nav-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    color: #fff;
-    letter-spacing: 0.02em;
-  }
-
-  .nav-tabs {
-    display: flex;
-    gap: 4px;
-  }
-
-  .tab-btn {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: none;
-    background: transparent;
-    color: rgba(255,255,255,0.65);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .tab-btn.active {
-    background: rgba(255,255,255,0.18);
-    color: #fff;
-  }
-
-  /* ── PAGES ── */
   .page { display: none; padding: 16px; }
   .page.active { display: block; }
 
-  /* ── STATS BAR ── */
-  .stats-bar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 16px;
-  }
+  .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--wine); line-height: 1; margin-bottom: 2px; }
+  .stat-lbl { font-size: 11px; color: var(--ink-muted); }
 
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px;
-    text-align: center;
-  }
+  .filters { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .filters input, .filters select { flex: 1; min-width: 120px; height: 38px; padding: 0 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink); appearance: none; -webkit-appearance: none; }
+  .filters input:focus, .filters select:focus { outline: none; border-color: var(--wine-light); }
 
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    color: var(--wine);
-    line-height: 1;
-    margin-bottom: 2px;
-  }
-
-  .stat-lbl {
-    font-size: 11px;
-    color: var(--ink-muted);
-    font-weight: 400;
-  }
-
-  /* ── FILTERS ── */
-  .filters {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-
-  .filters input,
-  .filters select {
-    flex: 1;
-    min-width: 120px;
-    height: 38px;
-    padding: 0 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--card);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    color: var(--ink);
-    appearance: none;
-    -webkit-appearance: none;
-  }
-
-  .filters input:focus,
-  .filters select:focus {
-    outline: none;
-    border-color: var(--wine-light);
-  }
-
-  /* ── WINE CARDS ── */
   .wine-list { display: flex; flex-direction: column; gap: 10px; }
 
-  .wine-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    box-shadow: var(--shadow);
-    animation: fadeIn 0.3s ease;
-  }
-
+  .wine-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); animation: fadeIn 0.3s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
 
-  .wine-dot {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .dot-tinto    { background: #F5EBE8; }
-  .dot-blanco   { background: #F0F5E8; }
-  .dot-rosado   { background: #F5E8F0; }
-  .dot-espumoso { background: #EBE8F5; }
+  .wine-card-top { display: flex; gap: 12px; align-items: flex-start; }
+  .wine-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .dot-tinto { background: #F5EBE8; } .dot-blanco { background: #F0F5E8; } .dot-rosado { background: #F5E8F0; } .dot-espumoso { background: #EBE8F5; }
 
   .wine-body { flex: 1; min-width: 0; }
+  .wine-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wine-sub { font-size: 12px; color: var(--ink-muted); margin-bottom: 7px; }
+  .wine-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  .tag-zona { background: #EBF2FB; color: #1A5490; }
+  .tag-tinto { background: #F5EBE8; color: #7B1C2E; } .tag-blanco { background: #F0F5E8; color: #2E5A1C; }
+  .tag-rosado { background: #F5E8F0; color: #7B1C5A; } .tag-espumoso { background: #EBE8F5; color: #3A1C7B; }
+  .tag-año { background: #F5F0E8; color: #5A3A1C; }
+  .wine-notas { font-size: 12px; color: var(--ink-muted); line-height: 1.4; margin-bottom: 5px; }
+  .wine-who { font-size: 11px; color: var(--ink-muted); }
 
-  .wine-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 1px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .wine-score { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--wine); line-height: 1; }
+  .score-stars { font-size: 11px; color: var(--gold); }
 
-  .wine-sub {
-    font-size: 12px;
-    color: var(--ink-muted);
-    margin-bottom: 7px;
-  }
+  /* Reacciones */
+  .wine-reactions { display: flex; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
+  .reaction-btn { display: flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); font-size: 12px; color: var(--ink-muted); cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .reaction-btn:hover { border-color: var(--wine-light); color: var(--wine); }
+  .reaction-btn.voted { background: var(--wine-pale); border-color: var(--wine-light); color: var(--wine); font-weight: 500; }
+  .reaction-count { font-weight: 500; }
 
-  .wine-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
+  /* Botones autor */
+  .wine-actions { display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end; }
+  .btn-edit, .btn-delete { padding: 4px 12px; border-radius: 8px; border: 1px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+  .btn-edit { background: var(--surface); color: var(--ink-muted); }
+  .btn-edit:hover { border-color: var(--wine-light); color: var(--wine); }
+  .btn-delete { background: var(--surface); color: #C0392B; border-color: #FADBD8; }
+  .btn-delete:hover { background: #FADBD8; }
 
-  .tag {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-weight: 400;
-  }
-
-  .tag-zona     { background: #EBF2FB; color: #1A5490; }
-  .tag-tinto    { background: #F5EBE8; color: #7B1C2E; }
-  .tag-blanco   { background: #F0F5E8; color: #2E5A1C; }
-  .tag-rosado   { background: #F5E8F0; color: #7B1C5A; }
-  .tag-espumoso { background: #EBE8F5; color: #3A1C7B; }
-  .tag-año      { background: #F5F0E8; color: #5A3A1C; }
-
-  .wine-score {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 3px;
-    flex-shrink: 0;
-  }
-
-  .score-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    color: var(--wine);
-    line-height: 1;
-  }
-
-  .score-stars {
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 1px;
-  }
-
-  .wine-who {
-    font-size: 11px;
-    color: var(--ink-muted);
-    margin-top: 6px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 48px 24px;
-    color: var(--ink-muted);
-  }
-
-  .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; line-height: 1.6; }
-
-  /* ── FORMULARIO ── */
-  .form-header {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    color: var(--wine);
-    margin-bottom: 4px;
-  }
-
-  .form-sub {
-    font-size: 13px;
-    color: var(--ink-muted);
-    margin-bottom: 20px;
-  }
-
-  .form-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 12px;
-  }
-
-  .section-label {
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-muted);
-    margin-bottom: 12px;
-  }
-
+  /* Formulario */
+  .form-header { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--wine); margin-bottom: 4px; }
+  .form-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 20px; }
+  .form-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+  .section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 12px; }
   .field { margin-bottom: 12px; }
   .field:last-child { margin-bottom: 0; }
-
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink-muted);
-    margin-bottom: 5px;
-  }
-
-  .field input,
-  .field select,
-  .field textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--ink);
-    background: var(--surface);
-    appearance: none;
-    -webkit-appearance: none;
-    transition: border-color 0.2s;
-  }
-
-  .field input:focus,
-  .field select:focus,
-  .field textarea:focus {
-    outline: none;
-    border-color: var(--wine-light);
-    background: #fff;
-  }
-
+  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--ink-muted); margin-bottom: 5px; }
+  .field input, .field select, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); background: var(--surface); appearance: none; -webkit-appearance: none; transition: border-color 0.2s; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--wine-light); background: #fff; }
   .field textarea { height: 72px; resize: none; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  /* Score slider */
-  .score-display {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-
-  .score-big {
-    font-family: 'Playfair Display', serif;
-    font-size: 36px;
-    color: var(--wine);
-    line-height: 1;
-  }
-
+  .score-display { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; }
+  .score-big { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--wine); line-height: 1; }
   .score-max { font-size: 14px; color: var(--ink-muted); }
+  input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; outline: none; padding: 0; border: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--wine); cursor: pointer; border: 3px solid #fff; box-shadow: 0 1px 6px rgba(123,28,46,0.3); }
 
-  input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 4px;
-    border-radius: 2px;
-    background: linear-gradient(to right, var(--wine) 0%, var(--wine) var(--pct, 70%), var(--border) var(--pct, 70%));
-    outline: none;
-    padding: 0;
-    border: none;
-    background-color: transparent;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--wine);
-    cursor: pointer;
-    border: 3px solid #fff;
-    box-shadow: 0 1px 6px rgba(123,28,46,0.3);
-  }
-
-  /* Submit button */
-  .btn-submit {
-    width: 100%;
-    height: 50px;
-    background: var(--wine);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    letter-spacing: 0.02em;
-    margin-top: 8px;
-    transition: background 0.2s, transform 0.1s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
+  .btn-submit { width: 100%; height: 50px; background: var(--wine); color: #fff; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-submit:active { transform: scale(0.98); background: var(--wine-light); }
   .btn-submit:disabled { opacity: 0.6; }
 
-  /* ── SUCCESS ── */
-  .success-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(26,16,20,0.7);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-
+  .success-overlay { display: none; position: fixed; inset: 0; background: rgba(26,16,20,0.7); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
   .success-overlay.show { display: flex; }
-
-  .success-card {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 32px 24px;
-    text-align: center;
-    width: 100%;
-    max-width: 320px;
-    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
+  .success-card { background: var(--card); border-radius: 20px; padding: 32px 24px; text-align: center; width: 100%; max-width: 320px; animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
   @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
   .success-icon { font-size: 52px; margin-bottom: 12px; }
-  .success-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    color: var(--wine);
-    margin-bottom: 6px;
-  }
+  .success-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--wine); margin-bottom: 6px; }
   .success-sub { font-size: 14px; color: var(--ink-muted); line-height: 1.5; }
-  .success-wine {
-    background: var(--wine-pale);
-    border-radius: 10px;
-    padding: 12px;
-    margin: 16px 0;
-    font-size: 14px;
-    color: var(--wine);
-    font-weight: 500;
-  }
-  .btn-ok {
-    width: 100%;
-    height: 44px;
-    background: var(--wine);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-  }
+  .success-wine { background: var(--wine-pale); border-radius: 10px; padding: 12px; margin: 16px 0; font-size: 14px; color: var(--wine); font-weight: 500; }
+  .btn-ok { width: 100%; height: 44px; background: var(--wine); color: #fff; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; }
+
+  /* Modal confirmar borrado */
+  .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(26,16,20,0.7); z-index: 300; align-items: center; justify-content: center; padding: 24px; }
+  .confirm-overlay.show { display: flex; }
+  .confirm-card { background: var(--card); border-radius: 16px; padding: 24px; width: 100%; max-width: 300px; text-align: center; }
+  .confirm-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+  .confirm-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 20px; }
+  .confirm-actions { display: flex; gap: 8px; }
+  .btn-cancel-confirm { flex: 1; height: 40px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink-muted); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; }
+  .btn-confirm-delete { flex: 1; height: 40px; border-radius: 8px; border: none; background: #C0392B; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; }
+
+  .no-results { text-align: center; padding: 48px 24px; color: var(--ink-muted); font-size: 14px; }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .loading { text-align: center; padding: 48px; color: var(--ink-muted); font-size: 14px; }
 </style>
 </head>
 <body>
@@ -452,106 +136,58 @@
 <nav class="nav">
   <span class="nav-title">🍷 La Bodega</span>
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="showTab('catalogo')">Catálogo</button>
-    <button class="tab-btn" onclick="showTab('añadir')">+ Añadir</button>
+    <button class="tab-btn active" onclick="showTab('catalogo', this)">Catálogo</button>
+    <button class="tab-btn" onclick="showTab('añadir', this)">+ Añadir</button>
   </div>
 </nav>
 
 <!-- CATÁLOGO -->
 <div class="page active" id="page-catalogo">
-
   <div class="stats-bar" id="statsBar"></div>
-
   <div class="filters">
     <input type="text" id="search" placeholder="🔍  Buscar vino o bodega..." oninput="renderCatalog()">
-    <select id="filtroTipo" onchange="renderCatalog()">
-      <option value="">Todos los tipos</option>
-      <option>Tinto</option>
-      <option>Blanco</option>
-      <option>Rosado</option>
-      <option>Espumoso</option>
-    </select>
-    <select id="filtroZona" onchange="renderCatalog()">
-      <option value="">Todas las zonas</option>
-    </select>
-    <select id="filtroUser" onchange="renderCatalog()">
-      <option value="">Todos los usuarios</option>
-    </select>
-    <select id="filtroOrden" onchange="renderCatalog()">
-      <option value="fecha">Más recientes</option>
-      <option value="score">Mejor puntuados</option>
-      <option value="nombre">A → Z</option>
-    </select>
+    <select id="filtroTipo" onchange="renderCatalog()"><option value="">Todos los tipos</option><option>Tinto</option><option>Blanco</option><option>Rosado</option><option>Espumoso</option></select>
+    <select id="filtroZona" onchange="renderCatalog()"><option value="">Todas las zonas</option></select>
+    <select id="filtroUser" onchange="renderCatalog()"><option value="">Todos los usuarios</option></select>
+    <select id="filtroOrden" onchange="renderCatalog()"><option value="fecha">Más recientes</option><option value="score">Mejor puntuados</option><option value="nombre">A → Z</option></select>
   </div>
-
-  <div class="wine-list" id="wineList"></div>
+  <div class="wine-list" id="wineList"><div class="loading">Cargando bodega...</div></div>
 </div>
 
 <!-- FORMULARIO -->
 <div class="page" id="page-añadir">
-  <h2 class="form-header">Añadir recomendación</h2>
-  <p class="form-sub">Rellena los datos del vino que quieres recomendar al grupo.</p>
+  <h2 class="form-header" id="formTitle">Añadir recomendación</h2>
+  <p class="form-sub">Rellena los datos del vino que quieres recomendar.</p>
+  <input type="hidden" id="editingId">
 
   <div class="form-section">
     <div class="section-label">🍾 El vino</div>
-    <div class="field">
-      <label>Nombre del vino *</label>
-      <input id="fNombre" type="text" placeholder="Ej: Vega Sicilia Único">
+    <div class="field"><label>Nombre del vino *</label><input id="fNombre" type="text" placeholder="Ej: Vega Sicilia Único"></div>
+    <div class="field-row">
+      <div class="field"><label>Bodega *</label><input id="fBodega" type="text" placeholder="Ej: Vega Sicilia"></div>
+      <div class="field"><label>Año de cosecha</label><input id="fAño" type="number" placeholder="2019" min="1900" max="2030"></div>
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>Bodega *</label>
-        <input id="fBodega" type="text" placeholder="Ej: Vega Sicilia">
-      </div>
-      <div class="field">
-        <label>Año de cosecha</label>
-        <input id="fAño" type="number" placeholder="2019" min="1900" max="2025">
-      </div>
+      <div class="field"><label>Zona / D.O.</label><input id="fZona" type="text" placeholder="Ej: Ribera del Duero"></div>
+      <div class="field"><label>Tipo</label><select id="fTipo"><option>Tinto</option><option>Blanco</option><option>Rosado</option><option>Espumoso</option><option>Dulce</option><option>Generoso</option></select></div>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Zona / D.O.</label>
-        <input id="fZona" type="text" placeholder="Ej: Ribera del Duero">
-      </div>
-      <div class="field">
-        <label>Tipo</label>
-        <select id="fTipo">
-          <option>Tinto</option>
-          <option>Blanco</option>
-          <option>Rosado</option>
-          <option>Espumoso</option>
-          <option>Dulce</option>
-          <option>Generoso</option>
-        </select>
-      </div>
-    </div>
-    <div class="field">
-      <label>Precio aproximado (€)</label>
-      <input id="fPrecio" type="number" placeholder="25" min="1">
-    </div>
+    <div class="field"><label>Precio aproximado (€)</label><input id="fPrecio" type="number" placeholder="25" min="1"></div>
   </div>
 
   <div class="form-section">
     <div class="section-label">⭐ Tu valoración</div>
-    <div class="score-display">
-      <span class="score-big" id="scoreVal">7.0</span>
-      <span class="score-max">/ 10</span>
-    </div>
-    <input type="range" id="fScore" min="1" max="10" step="0.5" value="7"
-      oninput="updateScore(this.value)">
+    <div class="score-display"><span class="score-big" id="scoreVal">7.0</span><span class="score-max">/ 10</span></div>
+    <input type="range" id="fScore" min="1" max="10" step="0.5" value="7" oninput="updateScore(this.value)">
   </div>
 
   <div class="form-section">
     <div class="section-label">📝 Notas de cata</div>
-    <div class="field" style="margin-bottom:0">
-      <textarea id="fNotas" placeholder="Describe aromas, sabores, maridaje sugerido..."></textarea>
-    </div>
+    <div class="field" style="margin-bottom:0"><textarea id="fNotas" placeholder="Describe aromas, sabores, maridaje sugerido..."></textarea></div>
   </div>
 
-  <button class="btn-submit" onclick="submitWine()">
-    <span>🍷</span> Publicar en el grupo
+  <button class="btn-submit" id="btnSubmit" onclick="submitWine()">
+    <span>🍷</span> <span id="btnText">Publicar en el grupo</span>
   </button>
-
   <div style="height: 32px;"></div>
 </div>
 
@@ -566,57 +202,52 @@
   </div>
 </div>
 
-<script>
-// ── Telegram Web App init ──────────────────────────────────────────────────
-const tg = window.Telegram?.WebApp;
-if (tg) {
-  tg.ready();
-  tg.expand();
-}
+<!-- CONFIRMAR BORRADO -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-card">
+    <div class="confirm-title">¿Borrar este vino?</div>
+    <p class="confirm-sub">Esta acción no se puede deshacer.</p>
+    <div class="confirm-actions">
+      <button class="btn-cancel-confirm" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn-confirm-delete" onclick="confirmDelete()">Borrar</button>
+    </div>
+  </div>
+</div>
 
-// ── Storage helpers ────────────────────────────────────────────────────────
-const KEY = 'bodega_wines_v1';
+<script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzF4zAzGwai7ELzrooW1dq1IMEBhQ0XCMkYRTMj_N319luNUngbIXGxrnmXH1IZuQhnMg/exec';
 
-async function loadWines() {
-  try {
-    const res = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
-    const data = await res.json();
-    wines = data.length > 0 ? data : [];
-  } catch(e) {
-    console.error('Error cargando vinos:', e);
-    wines = [];
-  }
-  render();
-}
-async function saveWines(wines) {
-  try { await window.storage?.set(KEY, JSON.stringify(wines)); } catch {}
-}
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
 
-function sampleWines() {
-  return [
-    { id:1, nombre:'Pingus', bodega:'Dominio de Pingus', año:2018, zona:'Ribera del Duero', tipo:'Tinto', precio:650, score:9.5, notas:'Impresionante concentración. Largo, largo en boca. Un vino de leyenda.', user:'@Carlos', fecha:'2024-11-10' },
-    { id:2, nombre:'Pazo Señorans Selección', bodega:'Pazo Señorans', año:2020, zona:'Rías Baixas', tipo:'Blanco', precio:35, score:8.8, notas:'Floral y cítrico, con una salinidad mineral elegante. Perfecto con marisco.', user:'@María', fecha:'2024-12-01' },
-    { id:3, nombre:'Muga Reserva', bodega:'Bodegas Muga', año:2019, zona:'Rioja', tipo:'Tinto', precio:18, score:8.5, notas:'Clásico riojano. Roble bien integrado. Elegante y gastronómico.', user:'@Pepe', fecha:'2025-01-15' },
-    { id:4, nombre:'Gramona Imperial', bodega:'Gramona', año:2017, zona:'Penedès', tipo:'Espumoso', precio:28, score:9.0, notas:'Burbuja finísima, autolítico, complejo. Rival de grandes champagnes.', user:'@Carlos', fecha:'2025-02-20' },
-    { id:5, nombre:'Barbazul', bodega:'Barranco Oscuro', año:2020, zona:'Granada', tipo:'Tinto', precio:22, score:8.2, notas:'Garnacha de alta montaña. Fruta roja fresca, especias. Sorprendente.', user:'@Lucía', fecha:'2025-03-05' },
-  ];
-}
+// Usuario actual de Telegram
+const tgUser = tg?.initDataUnsafe?.user;
+const currentUser = tgUser ? `@${tgUser.username || tgUser.first_name}` : 'Anónimo';
 
 let wines = [];
+let deletingId = null;
 
-// ── UI helpers ─────────────────────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────────────────
 function typeEmoji(t) { return {Tinto:'🍷',Blanco:'🥂',Rosado:'🌸',Espumoso:'✨',Dulce:'🍯',Generoso:'🏺'}[t]||'🍾'; }
 function typeDot(t)   { return {Tinto:'dot-tinto',Blanco:'dot-blanco',Rosado:'dot-rosado',Espumoso:'dot-espumoso'}[t]||'dot-tinto'; }
 function typeTag(t)   { return 'tag-'+(t||'tinto').toLowerCase(); }
 function stars(s)     { const n=Math.round(s/2); return '★'.repeat(n)+'☆'.repeat(5-n); }
-function fmtScore(s)  { return Number(s).toFixed(1); }
 
-function showTab(tab) {
+function fmtFecha(f) {
+  if (!f) return '';
+  // Normalizar: coger solo la parte de fecha YYYY-MM-DD
+  const str = String(f).slice(0, 10);
+  const [y, m, d] = str.split('-');
+  if (!y || !m || !d) return f;
+  return `${d}/${m}/${y}`;
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────
+function showTab(tab, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if (btn) btn.classList.add('active');
   if (tab === 'catalogo') renderCatalog();
 }
 
@@ -625,10 +256,22 @@ function updateScore(v) {
   document.getElementById('scoreVal').textContent = parseFloat(v).toFixed(1);
   const slider = document.getElementById('fScore');
   const pct = ((v - slider.min) / (slider.max - slider.min)) * 100;
-  slider.style.setProperty('--pct', pct + '%');
   slider.style.background = `linear-gradient(to right, #7B1C2E 0%, #7B1C2E ${pct}%, #E8DDD8 ${pct}%)`;
 }
 updateScore(7);
+
+// ── Load wines ─────────────────────────────────────────────────────────────
+async function loadWines() {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
+    const data = await res.json();
+    wines = Array.isArray(data) ? data : [];
+  } catch(e) {
+    console.error('Error cargando vinos:', e);
+    wines = [];
+  }
+  renderCatalog();
+}
 
 // ── Catalog render ─────────────────────────────────────────────────────────
 function populateSelects() {
@@ -658,11 +301,10 @@ function renderCatalog() {
   });
 
   if (orden === 'score') list.sort((a,b) => b.score - a.score);
-  else if (orden === 'nombre') list.sort((a,b) => a.nombre.localeCompare(b.nombre));
+  else if (orden === 'nombre') list.sort((a,b) => String(a.nombre).localeCompare(String(b.nombre)));
   else list.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
 
-  // Stats
-  const avg = wines.length ? (wines.reduce((s,w)=>s+w.score,0)/wines.length).toFixed(1) : '-';
+  const avg = wines.length ? (wines.reduce((s,w)=>s+parseFloat(w.score||0),0)/wines.length).toFixed(1) : '-';
   const zonas = new Set(wines.map(w=>w.zona).filter(Boolean)).size;
   document.getElementById('statsBar').innerHTML = `
     <div class="stat-card"><div class="stat-num">${wines.length}</div><div class="stat-lbl">vinos</div></div>
@@ -672,68 +314,187 @@ function renderCatalog() {
 
   const el = document.getElementById('wineList');
   if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🍾</div><p>No hay vinos con esos filtros.<br>¡Sé el primero en añadir uno!</p></div>`;
+    el.innerHTML = `<div class="no-results"><div class="empty-icon">🍾</div><p>No hay vinos con esos filtros.</p></div>`;
     return;
   }
 
-  el.innerHTML = list.map(w => `
-    <div class="wine-card">
-      <div class="wine-dot ${typeDot(w.tipo)}">${typeEmoji(w.tipo)}</div>
-      <div class="wine-body">
-        <div class="wine-name">${w.nombre}${w.año ? ' <span style="font-weight:300;font-size:13px;color:var(--ink-muted)">' + w.año + '</span>' : ''}</div>
-        <div class="wine-sub">${w.bodega}</div>
-        <div class="wine-tags">
-          ${w.zona ? `<span class="tag tag-zona">${w.zona}</span>` : ''}
-          <span class="tag ${typeTag(w.tipo)}">${w.tipo}</span>
-          ${w.precio ? `<span class="tag tag-año">${w.precio}€</span>` : ''}
+  el.innerHTML = list.map(w => {
+    const isAuthor = w.user === currentUser;
+    const score = parseFloat(w.score || 0);
+    const reacciones = parseReacciones(w.reacciones);
+    const userVote = reacciones.votos?.[currentUser] || null;
+
+    return `
+    <div class="wine-card" id="card-${w.id}">
+      <div class="wine-card-top">
+        <div class="wine-dot ${typeDot(w.tipo)}">${typeEmoji(w.tipo)}</div>
+        <div class="wine-body">
+          <div class="wine-name">${w.nombre}${w.año ? ` <span style="font-weight:300;font-size:13px;color:var(--ink-muted)">${w.año}</span>` : ''}</div>
+          <div class="wine-sub">${w.bodega}</div>
+          <div class="wine-tags">
+            ${w.zona ? `<span class="tag tag-zona">${w.zona}</span>` : ''}
+            <span class="tag ${typeTag(w.tipo)}">${w.tipo}</span>
+            ${w.precio ? `<span class="tag tag-año">${w.precio}€</span>` : ''}
+          </div>
+          ${w.notas ? `<div class="wine-notas">${String(w.notas).length > 80 ? String(w.notas).slice(0,80)+'…' : w.notas}</div>` : ''}
+          <div class="wine-who">👤 ${w.user || 'Anónimo'} · ${fmtFecha(w.fecha)}</div>
         </div>
-        ${w.notas ? `<div class="wine-who" style="margin-top:5px;font-size:12px;color:var(--ink-muted);line-height:1.4">${w.notas.length > 70 ? w.notas.slice(0,70)+'…' : w.notas}</div>` : ''}
-        <div class="wine-who">👤 ${w.user || 'Anónimo'} · ${w.fecha || ''}</div>
+        <div class="wine-score">
+          <div class="score-num">${score.toFixed(1)}</div>
+          <div class="score-stars">${stars(score)}</div>
+        </div>
       </div>
-      <div class="wine-score">
-        <div class="score-num">${fmtScore(w.score)}</div>
-        <div class="score-stars">${stars(w.score)}</div>
+
+      <!-- Reacciones -->
+      <div class="wine-reactions">
+        <span style="font-size:11px;color:var(--ink-muted);margin-right:2px">¿Lo conoces?</span>
+        ${renderReaccionBtn(w.id, 'meh', '😐 Regular', reacciones, userVote)}
+        ${renderReaccionBtn(w.id, 'like', '👍 Me gustó', reacciones, userVote)}
+        ${renderReaccionBtn(w.id, 'love', '❤️ Imprescindible', reacciones, userVote)}
       </div>
-    </div>
-  `).join('');
+
+      ${isAuthor ? `
+      <div class="wine-actions">
+        <button class="btn-edit" onclick="editWine('${w.id}')">✏️ Editar</button>
+        <button class="btn-delete" onclick="askDelete('${w.id}')">🗑️ Borrar</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
 }
 
-// ── Submit wine ────────────────────────────────────────────────────────────
+function renderReaccionBtn(wineId, type, label, reacciones, userVote) {
+  const count = reacciones.conteo?.[type] || 0;
+  const voted = userVote === type;
+  return `<button class="reaction-btn ${voted ? 'voted' : ''}" onclick="votar('${wineId}', '${type}')">
+    ${label} ${count > 0 ? `<span class="reaction-count">${count}</span>` : ''}
+  </button>`;
+}
+
+function parseReacciones(raw) {
+  if (!raw) return { votos: {}, conteo: {} };
+  try { return typeof raw === 'string' ? JSON.parse(raw) : raw; }
+  catch { return { votos: {}, conteo: {} }; }
+}
+
+// ── Votar ──────────────────────────────────────────────────────────────────
+async function votar(wineId, tipo) {
+  const wine = wines.find(w => String(w.id) === String(wineId));
+  if (!wine) return;
+
+  const reacciones = parseReacciones(wine.reacciones);
+  const votoAnterior = reacciones.votos?.[currentUser];
+
+  // Si ya votó lo mismo, quita el voto
+  if (votoAnterior === tipo) {
+    reacciones.conteo[tipo] = Math.max(0, (reacciones.conteo[tipo] || 1) - 1);
+    delete reacciones.votos[currentUser];
+  } else {
+    // Quitar voto anterior si existía
+    if (votoAnterior) {
+      reacciones.conteo[votoAnterior] = Math.max(0, (reacciones.conteo[votoAnterior] || 1) - 1);
+    }
+    reacciones.votos[currentUser] = tipo;
+    reacciones.conteo[tipo] = (reacciones.conteo[tipo] || 0) + 1;
+  }
+
+  wine.reacciones = reacciones;
+
+  // Actualizar UI inmediatamente
+  renderCatalog();
+
+  // Guardar en Sheets
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'react', id: wineId, reacciones })
+    });
+  } catch(e) { console.error('Error guardando reacción:', e); }
+}
+
+// ── Editar ─────────────────────────────────────────────────────────────────
+function editWine(id) {
+  const wine = wines.find(w => String(w.id) === String(id));
+  if (!wine) return;
+
+  document.getElementById('editingId').value = id;
+  document.getElementById('fNombre').value  = wine.nombre || '';
+  document.getElementById('fBodega').value  = wine.bodega || '';
+  document.getElementById('fAño').value     = wine.año || '';
+  document.getElementById('fZona').value    = wine.zona || '';
+  document.getElementById('fTipo').value    = wine.tipo || 'Tinto';
+  document.getElementById('fPrecio').value  = wine.precio || '';
+  document.getElementById('fScore').value   = wine.score || 7;
+  document.getElementById('fNotas').value   = wine.notas || '';
+  updateScore(wine.score || 7);
+
+  document.getElementById('formTitle').textContent = '✏️ Editar vino';
+  document.getElementById('btnText').textContent = 'Guardar cambios';
+
+  showTab('añadir', document.querySelectorAll('.tab-btn')[1]);
+  document.querySelectorAll('.tab-btn')[0].classList.remove('active');
+}
+
+// ── Borrar ─────────────────────────────────────────────────────────────────
+function askDelete(id) {
+  deletingId = id;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function closeConfirm() {
+  deletingId = null;
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+
+async function confirmDelete() {
+  if (!deletingId) return;
+  closeConfirm();
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', id: deletingId })
+    });
+  } catch(e) { console.error('Error borrando:', e); }
+
+  wines = wines.filter(w => String(w.id) !== String(deletingId));
+  deletingId = null;
+  renderCatalog();
+
+  // Recargar desde Sheets tras un momento
+  setTimeout(loadWines, 1500);
+}
+
+// ── Submit ─────────────────────────────────────────────────────────────────
 async function submitWine() {
   const nombre = document.getElementById('fNombre').value.trim();
   const bodega = document.getElementById('fBodega').value.trim();
-  if (!nombre || !bodega) {
-    alert('El nombre del vino y la bodega son obligatorios.');
-    return;
-  }
+  if (!nombre || !bodega) { alert('El nombre y la bodega son obligatorios.'); return; }
 
-  const btn = document.querySelector('.btn-submit');
+  const btn = document.getElementById('btnSubmit');
   btn.disabled = true;
-  btn.innerHTML = '<span>⏳</span> Guardando...';
 
-  // Obtener usuario de Telegram si está disponible
-  const tgUser = tg?.initDataUnsafe?.user;
-  const userName = tgUser ? `@${tgUser.username || tgUser.first_name}` : 'Anónimo';
+  const editingId = document.getElementById('editingId').value;
+  const isEdit = !!editingId;
 
   const wine = {
-    id: Date.now(),
+    id:     isEdit ? editingId : Date.now(),
     nombre,
     bodega,
-    año: parseInt(document.getElementById('fAño').value) || null,
-    zona: document.getElementById('fZona').value.trim(),
-    tipo: document.getElementById('fTipo').value,
-    precio: parseFloat(document.getElementById('fPrecio').value) || null,
-    score: parseFloat(document.getElementById('fScore').value),
-    notas: document.getElementById('fNotas').value.trim(),
-    user: userName,
-    fecha: new Date().toISOString().slice(0,10),
+    año:    parseInt(document.getElementById('fAño').value) || '',
+    zona:   document.getElementById('fZona').value.trim(),
+    tipo:   document.getElementById('fTipo').value,
+    precio: parseFloat(document.getElementById('fPrecio').value) || '',
+    score:  parseFloat(document.getElementById('fScore').value),
+    notas:  document.getElementById('fNotas').value.trim(),
+    user:   currentUser,
+    fecha:  isEdit ? (wines.find(w=>String(w.id)===editingId)?.fecha || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10),
+    action: isEdit ? 'edit' : 'new_wine',
   };
 
-  wines.unshift(wine);
-  await saveWines(wines);
-
-  // Notificar al bot (para que publique en el grupo)
-// Enviar datos al Google Apps Script
   try {
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
@@ -741,36 +502,34 @@ async function submitWine() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(wine)
     });
-  } catch(e) {
-    console.error('Error enviando a Apps Script:', e);
-  }
+  } catch(e) { console.error('Error guardando:', e); }
 
   btn.disabled = false;
-  btn.innerHTML = '<span>🍷</span> Publicar en el grupo';
 
   // Resetear formulario
   ['fNombre','fBodega','fAño','fZona','fPrecio','fNotas'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fTipo').value = 'Tinto';
   document.getElementById('fScore').value = 7;
+  document.getElementById('editingId').value = '';
+  document.getElementById('formTitle').textContent = 'Añadir recomendación';
+  document.getElementById('btnText').textContent = 'Publicar en el grupo';
   updateScore(7);
 
-  // Mostrar éxito
   document.getElementById('successWineName').textContent = `${wine.nombre} · ${wine.bodega}`;
   document.getElementById('successOverlay').classList.add('show');
+
+  // Recargar datos
+  setTimeout(loadWines, 1500);
 }
 
 function closeSuccess() {
   document.getElementById('successOverlay').classList.remove('show');
-  showTab('catalogo');
-  document.querySelector('.tab-btn').classList.add('active');
+  showTab('catalogo', document.querySelectorAll('.tab-btn')[0]);
   document.querySelectorAll('.tab-btn')[1].classList.remove('active');
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
-loadWines().then(data => {
-  wines = data;
-  renderCatalog();
-});
+loadWines();
 </script>
 </body>
 </html>
