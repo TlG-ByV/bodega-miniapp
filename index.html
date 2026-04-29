@@ -450,11 +450,11 @@ async function confirmDelete() {
   if (!deletingId) return;
   closeConfirm();
   try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'delete', id: deletingId })
-    });
+   const params = new URLSearchParams({ action: 'delete', id: deletingId });
+  await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {
+    method: 'POST',
+    mode: 'no-cors'
+  });
   } catch(e) { console.error('Error borrando:', e); }
   wines = wines.filter(w => String(w.id) !== String(deletingId));
   deletingId = null;
