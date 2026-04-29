@@ -580,11 +580,15 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzF4zAzGwai7ELz
 
 async function loadWines() {
   try {
-    const r = await window.storage?.get(KEY);
-    return r ? JSON.parse(r.value) : sampleWines();
-  } catch { return sampleWines(); }
+    const res = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
+    const data = await res.json();
+    wines = data.length > 0 ? data : [];
+  } catch(e) {
+    console.error('Error cargando vinos:', e);
+    wines = [];
+  }
+  render();
 }
-
 async function saveWines(wines) {
   try { await window.storage?.set(KEY, JSON.stringify(wines)); } catch {}
 }
