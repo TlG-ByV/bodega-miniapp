@@ -61,6 +61,7 @@
   .tag-tinto { background: #F5EBE8; color: #7B1C2E; } .tag-blanco { background: #F0F5E8; color: #2E5A1C; }
   .tag-rosado { background: #F5E8F0; color: #7B1C5A; } .tag-espumoso { background: #EBE8F5; color: #3A1C7B; }
   .tag-año { background: #F5F0E8; color: #5A3A1C; }
+  .tag-uva { background: #F0EBF5; color: #4A1C7B; }
   .wine-notas { font-size: 12px; color: var(--ink-muted); line-height: 1.4; margin-bottom: 5px; }
   .wine-who { font-size: 11px; color: var(--ink-muted); }
 
@@ -68,14 +69,12 @@
   .score-num { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--wine); line-height: 1; }
   .score-stars { font-size: 11px; color: var(--gold); }
 
-  /* Reacciones */
   .wine-reactions { display: flex; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
   .reaction-btn { display: flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); font-size: 12px; color: var(--ink-muted); cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
   .reaction-btn:hover { border-color: var(--wine-light); color: var(--wine); }
   .reaction-btn.voted { background: var(--wine-pale); border-color: var(--wine-light); color: var(--wine); font-weight: 500; }
   .reaction-count { font-weight: 500; }
 
-  /* Botones autor */
   .wine-actions { display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end; }
   .btn-edit, .btn-delete { padding: 4px 12px; border-radius: 8px; border: 1px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; }
   .btn-edit { background: var(--surface); color: var(--ink-muted); }
@@ -83,7 +82,6 @@
   .btn-delete { background: var(--surface); color: #C0392B; border-color: #FADBD8; }
   .btn-delete:hover { background: #FADBD8; }
 
-  /* Formulario */
   .form-header { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--wine); margin-bottom: 4px; }
   .form-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 20px; }
   .form-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
@@ -95,6 +93,7 @@
   .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--wine-light); background: #fff; }
   .field textarea { height: 72px; resize: none; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .field-hint { font-size: 11px; color: var(--ink-muted); margin-top: 4px; }
 
   .score-display { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; }
   .score-big { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--wine); line-height: 1; }
@@ -116,7 +115,6 @@
   .success-wine { background: var(--wine-pale); border-radius: 10px; padding: 12px; margin: 16px 0; font-size: 14px; color: var(--wine); font-weight: 500; }
   .btn-ok { width: 100%; height: 44px; background: var(--wine); color: #fff; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; }
 
-  /* Modal confirmar borrado */
   .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(26,16,20,0.7); z-index: 300; align-items: center; justify-content: center; padding: 24px; }
   .confirm-overlay.show { display: flex; }
   .confirm-card { background: var(--card); border-radius: 16px; padding: 24px; width: 100%; max-width: 300px; text-align: center; }
@@ -145,7 +143,7 @@
 <div class="page active" id="page-catalogo">
   <div class="stats-bar" id="statsBar"></div>
   <div class="filters">
-    <input type="text" id="search" placeholder="🔍  Buscar vino o bodega..." oninput="renderCatalog()">
+    <input type="text" id="search" placeholder="🔍  Buscar vino, bodega, uva..." oninput="renderCatalog()">
     <select id="filtroTipo" onchange="renderCatalog()"><option value="">Todos los tipos</option><option>Tinto</option><option>Blanco</option><option>Rosado</option><option>Espumoso</option></select>
     <select id="filtroZona" onchange="renderCatalog()"><option value="">Todas las zonas</option></select>
     <select id="filtroUser" onchange="renderCatalog()"><option value="">Todos los usuarios</option></select>
@@ -170,6 +168,11 @@
     <div class="field-row">
       <div class="field"><label>Zona / D.O.</label><input id="fZona" type="text" placeholder="Ej: Ribera del Duero"></div>
       <div class="field"><label>Tipo</label><select id="fTipo"><option>Tinto</option><option>Blanco</option><option>Rosado</option><option>Espumoso</option><option>Dulce</option><option>Generoso</option></select></div>
+    </div>
+    <div class="field">
+      <label>Variedad/es de uva</label>
+      <input id="fUvas" type="text" placeholder="Ej: Tempranillo, Garnacha, Graciano">
+      <div class="field-hint">Separa varias variedades con comas (máx. 5)</div>
     </div>
     <div class="field"><label>Precio aproximado (€)</label><input id="fPrecio" type="number" placeholder="25" min="1"></div>
   </div>
@@ -220,7 +223,6 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzF4zAzGwai7ELz
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-// Usuario actual de Telegram
 const tgUser = tg?.initDataUnsafe?.user;
 const currentUser = tgUser ? `@${tgUser.username || tgUser.first_name}` : 'Anónimo';
 
@@ -235,11 +237,15 @@ function stars(s)     { const n=Math.round(s/2); return '★'.repeat(n)+'☆'.re
 
 function fmtFecha(f) {
   if (!f) return '';
-  // Normalizar: coger solo la parte de fecha YYYY-MM-DD
   const str = String(f).slice(0, 10);
   const [y, m, d] = str.split('-');
   if (!y || !m || !d) return f;
   return `${d}/${m}/${y}`;
+}
+
+function parseUvas(uvas) {
+  if (!uvas) return [];
+  return String(uvas).split(',').map(u => u.trim()).filter(Boolean).slice(0, 5);
 }
 
 // ── Tabs ───────────────────────────────────────────────────────────────────
@@ -296,7 +302,7 @@ function renderCatalog() {
     if (tipo && w.tipo !== tipo) return false;
     if (zona && w.zona !== zona) return false;
     if (user && w.user !== user) return false;
-    if (q && !`${w.nombre} ${w.bodega} ${w.zona} ${w.notas}`.toLowerCase().includes(q)) return false;
+    if (q && !`${w.nombre} ${w.bodega} ${w.zona} ${w.notas} ${w.uvas}`.toLowerCase().includes(q)) return false;
     return true;
   });
 
@@ -323,6 +329,7 @@ function renderCatalog() {
     const score = parseFloat(w.score || 0);
     const reacciones = parseReacciones(w.reacciones);
     const userVote = reacciones.votos?.[currentUser] || null;
+    const uvas = parseUvas(w.uvas);
 
     return `
     <div class="wine-card" id="card-${w.id}">
@@ -335,6 +342,7 @@ function renderCatalog() {
             ${w.zona ? `<span class="tag tag-zona">${w.zona}</span>` : ''}
             <span class="tag ${typeTag(w.tipo)}">${w.tipo}</span>
             ${w.precio ? `<span class="tag tag-año">${w.precio}€</span>` : ''}
+            ${uvas.map(u => `<span class="tag tag-uva">🍇 ${u}</span>`).join('')}
           </div>
           ${w.notas ? `<div class="wine-notas">${String(w.notas).length > 80 ? String(w.notas).slice(0,80)+'…' : w.notas}</div>` : ''}
           <div class="wine-who">👤 ${w.user || 'Anónimo'} · ${fmtFecha(w.fecha)}</div>
@@ -345,7 +353,6 @@ function renderCatalog() {
         </div>
       </div>
 
-      <!-- Reacciones -->
       <div class="wine-reactions">
         <span style="font-size:11px;color:var(--ink-muted);margin-right:2px">¿Lo conoces?</span>
         ${renderReaccionBtn(w.id, 'meh', '😐 Regular', reacciones, userVote)}
@@ -384,29 +391,21 @@ async function votar(wineId, tipo) {
   const reacciones = parseReacciones(wine.reacciones);
   const votoAnterior = reacciones.votos?.[currentUser];
 
-  // Si ya votó lo mismo, quita el voto
   if (votoAnterior === tipo) {
     reacciones.conteo[tipo] = Math.max(0, (reacciones.conteo[tipo] || 1) - 1);
     delete reacciones.votos[currentUser];
   } else {
-    // Quitar voto anterior si existía
-    if (votoAnterior) {
-      reacciones.conteo[votoAnterior] = Math.max(0, (reacciones.conteo[votoAnterior] || 1) - 1);
-    }
+    if (votoAnterior) reacciones.conteo[votoAnterior] = Math.max(0, (reacciones.conteo[votoAnterior] || 1) - 1);
     reacciones.votos[currentUser] = tipo;
     reacciones.conteo[tipo] = (reacciones.conteo[tipo] || 0) + 1;
   }
 
   wine.reacciones = reacciones;
-
-  // Actualizar UI inmediatamente
   renderCatalog();
 
-  // Guardar en Sheets
   try {
     await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'react', id: wineId, reacciones })
     });
@@ -418,20 +417,20 @@ function editWine(id) {
   const wine = wines.find(w => String(w.id) === String(id));
   if (!wine) return;
 
-  document.getElementById('editingId').value = id;
-  document.getElementById('fNombre').value  = wine.nombre || '';
-  document.getElementById('fBodega').value  = wine.bodega || '';
-  document.getElementById('fAño').value     = wine.año || '';
-  document.getElementById('fZona').value    = wine.zona || '';
-  document.getElementById('fTipo').value    = wine.tipo || 'Tinto';
-  document.getElementById('fPrecio').value  = wine.precio || '';
-  document.getElementById('fScore').value   = wine.score || 7;
-  document.getElementById('fNotas').value   = wine.notas || '';
+  document.getElementById('editingId').value  = id;
+  document.getElementById('fNombre').value    = wine.nombre || '';
+  document.getElementById('fBodega').value    = wine.bodega || '';
+  document.getElementById('fAño').value       = wine.año || '';
+  document.getElementById('fZona').value      = wine.zona || '';
+  document.getElementById('fTipo').value      = wine.tipo || 'Tinto';
+  document.getElementById('fUvas').value      = wine.uvas || '';
+  document.getElementById('fPrecio').value    = wine.precio || '';
+  document.getElementById('fScore').value     = wine.score || 7;
+  document.getElementById('fNotas').value     = wine.notas || '';
   updateScore(wine.score || 7);
 
   document.getElementById('formTitle').textContent = '✏️ Editar vino';
   document.getElementById('btnText').textContent = 'Guardar cambios';
-
   showTab('añadir', document.querySelectorAll('.tab-btn')[1]);
   document.querySelectorAll('.tab-btn')[0].classList.remove('active');
 }
@@ -450,21 +449,16 @@ function closeConfirm() {
 async function confirmDelete() {
   if (!deletingId) return;
   closeConfirm();
-
   try {
     await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'delete', id: deletingId })
     });
   } catch(e) { console.error('Error borrando:', e); }
-
   wines = wines.filter(w => String(w.id) !== String(deletingId));
   deletingId = null;
   renderCatalog();
-
-  // Recargar desde Sheets tras un momento
   setTimeout(loadWines, 1500);
 }
 
@@ -473,6 +467,10 @@ async function submitWine() {
   const nombre = document.getElementById('fNombre').value.trim();
   const bodega = document.getElementById('fBodega').value.trim();
   if (!nombre || !bodega) { alert('El nombre y la bodega son obligatorios.'); return; }
+
+  // Limitar uvas a 5
+  const uvasRaw = document.getElementById('fUvas').value.trim();
+  const uvas = parseUvas(uvasRaw).join(', ');
 
   const btn = document.getElementById('btnSubmit');
   btn.disabled = true;
@@ -487,6 +485,7 @@ async function submitWine() {
     año:    parseInt(document.getElementById('fAño').value) || '',
     zona:   document.getElementById('fZona').value.trim(),
     tipo:   document.getElementById('fTipo').value,
+    uvas,
     precio: parseFloat(document.getElementById('fPrecio').value) || '',
     score:  parseFloat(document.getElementById('fScore').value),
     notas:  document.getElementById('fNotas').value.trim(),
@@ -497,8 +496,7 @@ async function submitWine() {
 
   try {
     await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(wine)
     });
@@ -506,8 +504,7 @@ async function submitWine() {
 
   btn.disabled = false;
 
-  // Resetear formulario
-  ['fNombre','fBodega','fAño','fZona','fPrecio','fNotas'].forEach(id => document.getElementById(id).value = '');
+  ['fNombre','fBodega','fAño','fZona','fUvas','fPrecio','fNotas'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fTipo').value = 'Tinto';
   document.getElementById('fScore').value = 7;
   document.getElementById('editingId').value = '';
@@ -517,8 +514,6 @@ async function submitWine() {
 
   document.getElementById('successWineName').textContent = `${wine.nombre} · ${wine.bodega}`;
   document.getElementById('successOverlay').classList.add('show');
-
-  // Recargar datos
   setTimeout(loadWines, 1500);
 }
 
@@ -528,7 +523,6 @@ function closeSuccess() {
   document.querySelectorAll('.tab-btn')[1].classList.remove('active');
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────
 loadWines();
 </script>
 </body>
