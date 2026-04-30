@@ -55,7 +55,7 @@
   .wine-body { flex: 1; min-width: 0; }
   .wine-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .wine-sub { font-size: 12px; color: var(--ink-muted); margin-bottom: 7px; }
-  .wine-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .wine-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
   .tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; }
   .tag-zona { background: #EBF2FB; color: #1A5490; }
   .tag-tinto { background: #F5EBE8; color: #7B1C2E; } .tag-blanco { background: #F0F5E8; color: #2E5A1C; }
@@ -65,9 +65,11 @@
   .wine-notas { font-size: 12px; color: var(--ink-muted); line-height: 1.4; margin-bottom: 5px; }
   .wine-who { font-size: 11px; color: var(--ink-muted); }
 
-  .wine-score { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+  /* Score con barra de progreso */
+  .wine-score { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; min-width: 52px; }
   .score-num { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--wine); line-height: 1; }
-  .score-stars { font-size: 11px; color: var(--gold); }
+  .score-bar-wrap { width: 48px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #A63248, #7B1C2E); transition: width 0.4s ease; }
 
   .wine-reactions { display: flex; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
   .reaction-btn { display: flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); font-size: 12px; color: var(--ink-muted); cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
@@ -95,6 +97,7 @@
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .field-hint { font-size: 11px; color: var(--ink-muted); margin-top: 4px; }
 
+  /* Score slider formulario */
   .score-display { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; }
   .score-big { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--wine); line-height: 1; }
   .score-max { font-size: 14px; color: var(--ink-muted); }
@@ -179,8 +182,8 @@
 
   <div class="form-section">
     <div class="section-label">⭐ Tu valoración</div>
-    <div class="score-display"><span class="score-big" id="scoreVal">7.0</span><span class="score-max">/ 10</span></div>
-    <input type="range" id="fScore" min="1" max="10" step="0.5" value="7" oninput="updateScore(this.value)">
+    <div class="score-display"><span class="score-big" id="scoreVal">75</span><span class="score-max">/ 100</span></div>
+    <input type="range" id="fScore" min="0" max="100" step="1" value="75" oninput="updateScore(this.value)">
   </div>
 
   <div class="form-section">
@@ -233,7 +236,14 @@ let deletingId = null;
 function typeEmoji(t) { return {Tinto:'🍷',Blanco:'🥂',Rosado:'🌸',Espumoso:'✨',Dulce:'🍯',Generoso:'🏺'}[t]||'🍾'; }
 function typeDot(t)   { return {Tinto:'dot-tinto',Blanco:'dot-blanco',Rosado:'dot-rosado',Espumoso:'dot-espumoso'}[t]||'dot-tinto'; }
 function typeTag(t)   { return 'tag-'+(t||'tinto').toLowerCase(); }
-function stars(s)     { const n=Math.round(s/2); return '★'.repeat(n)+'☆'.repeat(5-n); }
+
+function scoreColor(s) {
+  if (s >= 90) return '#2E7D32';
+  if (s >= 80) return '#558B2F';
+  if (s >= 70) return '#7B1C2E';
+  if (s >= 60) return '#C09A5B';
+  return '#888';
+}
 
 function fmtFecha(f) {
   if (!f) return '';
@@ -259,12 +269,12 @@ function showTab(tab, btn) {
 
 // ── Score slider ───────────────────────────────────────────────────────────
 function updateScore(v) {
-  document.getElementById('scoreVal').textContent = parseFloat(v).toFixed(1);
+  document.getElementById('scoreVal').textContent = v;
   const slider = document.getElementById('fScore');
   const pct = ((v - slider.min) / (slider.max - slider.min)) * 100;
   slider.style.background = `linear-gradient(to right, #7B1C2E 0%, #7B1C2E ${pct}%, #E8DDD8 ${pct}%)`;
 }
-updateScore(7);
+updateScore(75);
 
 // ── Load wines ─────────────────────────────────────────────────────────────
 async function loadWines() {
@@ -277,6 +287,38 @@ async function loadWines() {
     wines = [];
   }
   renderCatalog();
+}
+
+// ── Enviar al Apps Script usando un iframe oculto (evita CORS en no-cors) ──
+function sendToScript(params) {
+  return new Promise(resolve => {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = APPS_SCRIPT_URL;
+    form.target = '_script_iframe';
+    form.style.display = 'none';
+
+    Object.entries(params).forEach(([k, v]) => {
+      const input = document.createElement('input');
+      input.name = k;
+      input.value = typeof v === 'object' ? JSON.stringify(v) : v;
+      form.appendChild(input);
+    });
+
+    let iframe = document.getElementById('_script_iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.name = '_script_iframe';
+      iframe.id = '_script_iframe';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    setTimeout(resolve, 800);
+  });
 }
 
 // ── Catalog render ─────────────────────────────────────────────────────────
@@ -306,11 +348,11 @@ function renderCatalog() {
     return true;
   });
 
-  if (orden === 'score') list.sort((a,b) => b.score - a.score);
+  if (orden === 'score') list.sort((a,b) => Number(b.score) - Number(a.score));
   else if (orden === 'nombre') list.sort((a,b) => String(a.nombre).localeCompare(String(b.nombre)));
   else list.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
 
-  const avg = wines.length ? (wines.reduce((s,w)=>s+parseFloat(w.score||0),0)/wines.length).toFixed(1) : '-';
+  const avg = wines.length ? Math.round(wines.reduce((s,w)=>s+Number(w.score||0),0)/wines.length) : '-';
   const zonas = new Set(wines.map(w=>w.zona).filter(Boolean)).size;
   document.getElementById('statsBar').innerHTML = `
     <div class="stat-card"><div class="stat-num">${wines.length}</div><div class="stat-lbl">vinos</div></div>
@@ -326,7 +368,8 @@ function renderCatalog() {
 
   el.innerHTML = list.map(w => {
     const isAuthor = w.user === currentUser;
-    const score = parseFloat(w.score || 0);
+    const score = Number(w.score || 0);
+    const pct = Math.min(100, score);
     const reacciones = parseReacciones(w.reacciones);
     const userVote = reacciones.votos?.[currentUser] || null;
     const uvas = parseUvas(w.uvas);
@@ -348,8 +391,10 @@ function renderCatalog() {
           <div class="wine-who">👤 ${w.user || 'Anónimo'} · ${fmtFecha(w.fecha)}</div>
         </div>
         <div class="wine-score">
-          <div class="score-num">${score.toFixed(1)}</div>
-          <div class="score-stars">${stars(score)}</div>
+          <div class="score-num" style="color:${scoreColor(score)}">${score}</div>
+          <div class="score-bar-wrap">
+            <div class="score-bar" style="width:${pct}%;background:${scoreColor(score)}"></div>
+          </div>
         </div>
       </div>
 
@@ -403,13 +448,7 @@ async function votar(wineId, tipo) {
   wine.reacciones = reacciones;
   renderCatalog();
 
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'react', id: wineId, reacciones })
-    });
-  } catch(e) { console.error('Error guardando reacción:', e); }
+  await sendToScript({ action: 'react', id: wineId, reacciones: JSON.stringify(reacciones) });
 }
 
 // ── Editar ─────────────────────────────────────────────────────────────────
@@ -425,9 +464,9 @@ function editWine(id) {
   document.getElementById('fTipo').value      = wine.tipo || 'Tinto';
   document.getElementById('fUvas').value      = wine.uvas || '';
   document.getElementById('fPrecio').value    = wine.precio || '';
-  document.getElementById('fScore').value     = wine.score || 7;
+  document.getElementById('fScore').value     = wine.score || 75;
   document.getElementById('fNotas').value     = wine.notas || '';
-  updateScore(wine.score || 7);
+  updateScore(wine.score || 75);
 
   document.getElementById('formTitle').textContent = '✏️ Editar vino';
   document.getElementById('btnText').textContent = 'Guardar cambios';
@@ -448,17 +487,13 @@ function closeConfirm() {
 
 async function confirmDelete() {
   if (!deletingId) return;
+  const idToDelete = deletingId;
   closeConfirm();
-  try {
-   const params = new URLSearchParams({ action: 'delete', id: deletingId });
-  await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {
-    method: 'POST',
-    mode: 'no-cors'
-  });
-  } catch(e) { console.error('Error borrando:', e); }
-  wines = wines.filter(w => String(w.id) !== String(deletingId));
-  deletingId = null;
+
+  wines = wines.filter(w => String(w.id) !== String(idToDelete));
   renderCatalog();
+
+  await sendToScript({ action: 'delete', id: idToDelete });
   setTimeout(loadWines, 1500);
 }
 
@@ -468,7 +503,6 @@ async function submitWine() {
   const bodega = document.getElementById('fBodega').value.trim();
   if (!nombre || !bodega) { alert('El nombre y la bodega son obligatorios.'); return; }
 
-  // Limitar uvas a 5
   const uvasRaw = document.getElementById('fUvas').value.trim();
   const uvas = parseUvas(uvasRaw).join(', ');
 
@@ -487,34 +521,28 @@ async function submitWine() {
     tipo:   document.getElementById('fTipo').value,
     uvas,
     precio: parseFloat(document.getElementById('fPrecio').value) || '',
-    score:  parseFloat(document.getElementById('fScore').value),
+    score:  parseInt(document.getElementById('fScore').value),
     notas:  document.getElementById('fNotas').value.trim(),
     user:   currentUser,
     fecha:  isEdit ? (wines.find(w=>String(w.id)===editingId)?.fecha || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10),
     action: isEdit ? 'edit' : 'new_wine',
   };
 
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(wine)
-    });
-  } catch(e) { console.error('Error guardando:', e); }
+  await sendToScript(wine);
 
   btn.disabled = false;
 
   ['fNombre','fBodega','fAño','fZona','fUvas','fPrecio','fNotas'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fTipo').value = 'Tinto';
-  document.getElementById('fScore').value = 7;
+  document.getElementById('fScore').value = 75;
   document.getElementById('editingId').value = '';
   document.getElementById('formTitle').textContent = 'Añadir recomendación';
   document.getElementById('btnText').textContent = 'Publicar en el grupo';
-  updateScore(7);
+  updateScore(75);
 
   document.getElementById('successWineName').textContent = `${wine.nombre} · ${wine.bodega}`;
   document.getElementById('successOverlay').classList.add('show');
-  setTimeout(loadWines, 1500);
+  setTimeout(loadWines, 2000);
 }
 
 function closeSuccess() {
