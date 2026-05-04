@@ -530,7 +530,7 @@ async function submitWine() {
     score:  parseInt(document.getElementById('fScore').value),
     notas:  document.getElementById('fNotas').value.trim(),
     user:   currentUser,
-    fecha:  document.getElementById('fFecha').value || new Date().toISOString().slice(0,10),
+    fecha:  document.getElementById('fFecha').value || (() => { const h = new Date(); return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}`; })(),
     action: isEdit ? 'edit' : 'new_wine',
   };
 
