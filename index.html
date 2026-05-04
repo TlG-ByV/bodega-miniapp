@@ -177,7 +177,12 @@
       <input id="fUvas" type="text" placeholder="Ej: Tempranillo, Garnacha, Graciano">
       <div class="field-hint">Separa varias variedades con comas (máx. 5)</div>
     </div>
-    <div class="field"><label>Precio aproximado (€)</label><input id="fPrecio" type="number" placeholder="25" min="1"></div>
+    <div class="field">
+      <label>Fecha de cata</label>
+      <input id="fFecha" type="date">
+      <div class="field-hint">Por defecto se usa la fecha de hoy</div>
+    </div>
+    <div class="field"><label>Precio aproximado (€)</label><input id="fPrecio" type="number" placeholder="25" min="1"></div>    
   </div>
 
   <div class="form-section">
@@ -463,6 +468,7 @@ function editWine(id) {
   document.getElementById('fZona').value      = wine.zona || '';
   document.getElementById('fTipo').value      = wine.tipo || 'Tinto';
   document.getElementById('fUvas').value      = wine.uvas || '';
+  document.getElementById('fFecha').value     = wine.fecha ? String(wine.fecha).slice(0,10) : '';
   document.getElementById('fPrecio').value    = wine.precio || '';
   document.getElementById('fScore').value     = wine.score || 75;
   document.getElementById('fNotas').value     = wine.notas || '';
@@ -524,7 +530,7 @@ async function submitWine() {
     score:  parseInt(document.getElementById('fScore').value),
     notas:  document.getElementById('fNotas').value.trim(),
     user:   currentUser,
-    fecha:  isEdit ? (wines.find(w=>String(w.id)===editingId)?.fecha || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10),
+    fecha:  document.getElementById('fFecha').value || new Date().toISOString().slice(0,10),
     action: isEdit ? 'edit' : 'new_wine',
   };
 
@@ -532,7 +538,7 @@ async function submitWine() {
 
   btn.disabled = false;
 
-  ['fNombre','fBodega','fAño','fZona','fUvas','fPrecio','fNotas'].forEach(id => document.getElementById(id).value = '');
+  ['fNombre','fBodega','fAño','fZona','fUvas','fPrecio','fNotas','fFecha'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fTipo').value = 'Tinto';
   document.getElementById('fScore').value = 75;
   document.getElementById('editingId').value = '';
